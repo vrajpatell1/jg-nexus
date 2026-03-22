@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JG Nexus</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --bg2: #111118;
+  --bg3: #1a1a24;
+  --bg4: #22222f;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #f0eff8;
+  --text2: #9998b0;
+  --text3: #5a5870;
+  --accent: #7c5cfc;
+  --accent2: #9b7ffe;
+  --accent-glow: rgba(124,92,252,0.15);
+  --teal: #2dd4bf;
+  --teal-dim: rgba(45,212,191,0.1);
+  --coral: #f97066;
+  --coral-dim: rgba(249,112,102,0.1);
+  --gold: #fbbf24;
+  --green: #34d399;
+  --green-dim: rgba(52,211,153,0.1);
+  --font-head: 'Space Grotesk', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --r: 12px;
+  --r2: 20px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 2px; }
+
+/* ── Layout ── */
+.app { display: grid; grid-template-columns: 240px 1fr 300px; min-height: 100vh; max-width: 1280px; margin: 0 auto; gap: 0; }
+
+/* ── Sidebar ── */
+.sidebar {
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  border-right: 1px solid var(--border);
+  padding: 24px 16px;
+  display: flex; flex-direction: column; gap: 4px;
+  background: var(--bg);
+}
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0 8px 24px;
+  font-family: var(--font-head); font-size: 22px; font-weight: 700; color: var(--text);
+  border-bottom: 1px solid var(--border); margin-bottom: 8px;
+}
+.logo-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700; color: white; font-family: var(--font-head);
+}
+.nav-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 14px; border-radius: var(--r); cursor: pointer;
+  color: var(--text2); font-size: 15px; font-weight: 400;
+  transition: all 0.18s; border: none; background: none; width: 100%; text-align: left;
+  position: relative;
+}
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active { background: var(--accent-glow); color: var(--accent2); font-weight: 500; }
+.nav-item.active .nav-icon { color: var(--accent); }
+.nav-icon { font-size: 20px; flex-shrink: 0; }
+.nav-badge {
+  margin-left: auto; background: var(--coral); color: white;
+  font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 20px; min-width: 20px; text-align: center;
+}
+.sidebar-profile {
+  margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px; padding: 16px 8px 0;
+}
+.avatar {
+  width: 36px; height: 36px; border-radius: 50%; object-fit: cover;
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 600; color: white; flex-shrink: 0;
+  font-family: var(--font-head);
+}
+.avatar.lg { width: 52px; height: 52px; font-size: 20px; }
+.avatar.xl { width: 80px; height: 80px; font-size: 30px; border: 3px solid var(--bg); }
+.avatar.sm { width: 28px; height: 28px; font-size: 11px; }
+.sidebar-profile-info { flex: 1; min-width: 0; }
+.sidebar-profile-name { font-size: 14px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sidebar-profile-handle { font-size: 12px; color: var(--text3); }
+
+/* ── Main feed ── */
+.main { border-right: 1px solid var(--border); min-height: 100vh; }
+.feed-header {
+  position: sticky; top: 0; z-index: 10;
+  background: rgba(10,10,15,0.85); backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.feed-title { font-family: var(--font-head); font-size: 20px; font-weight: 600; }
+.tab-row { display: flex; gap: 4px; }
+.tab {
+  padding: 7px 18px; border-radius: 30px; cursor: pointer; font-size: 14px; font-weight: 500;
+  color: var(--text2); border: none; background: none; transition: all 0.18s;
+}
+.tab:hover { color: var(--text); background: var(--bg3); }
+.tab.active { background: var(--accent); color: white; }
+
+/* ── Post composer ── */
+.composer {
+  padding: 20px 24px; border-bottom: 1px solid var(--border);
+  display: flex; gap: 12px;
+}
+.composer-box { flex: 1; }
+.composer-input {
+  width: 100%; background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 14px 16px; color: var(--text);
+  font-family: var(--font-body); font-size: 15px; resize: none; min-height: 72px;
+  transition: border 0.2s;
+}
+.composer-input::placeholder { color: var(--text3); }
+.composer-input:focus { outline: none; border-color: var(--accent); }
+.composer-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+.composer-tools { display: flex; gap: 4px; }
+.tool-btn {
+  width: 34px; height: 34px; border-radius: 8px; border: none;
+  background: transparent; cursor: pointer; color: var(--text2);
+  font-size: 16px; display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.tool-btn:hover { background: var(--bg4); color: var(--accent2); }
+.btn {
+  padding: 9px 22px; border-radius: 30px; font-size: 14px; font-weight: 600;
+  border: none; cursor: pointer; transition: all 0.18s; font-family: var(--font-body);
+}
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(124,92,252,0.4); }
+.btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border2); }
+.btn-ghost:hover { background: var(--bg3); color: var(--text); }
+.btn-sm { padding: 6px 14px; font-size: 13px; }
+
+/* ── Post card ── */
+.post {
+  padding: 20px 24px; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background 0.15s;
+}
+.post:hover { background: rgba(255,255,255,0.02); }
+.post-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.post-meta { flex: 1; }
+.post-author { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.verified { color: var(--teal); font-size: 14px; }
+.post-handle { font-size: 13px; color: var(--text3); margin-top: 1px; }
+.post-handle span { color: var(--text2); }
+.post-content { font-size: 15px; line-height: 1.6; color: var(--text); margin-bottom: 14px; }
+.post-content .tag { color: var(--accent2); }
+.post-image {
+  width: 100%; border-radius: var(--r); margin-bottom: 14px;
+  background: var(--bg3); height: 200px; display: flex; align-items: center; justify-content: center;
+  color: var(--text3); font-size: 13px; border: 1px solid var(--border);
+}
+.post-actions { display: flex; gap: 24px; }
+.action-btn {
+  display: flex; align-items: center; gap: 6px;
+  color: var(--text2); font-size: 13px; border: none; background: none;
+  cursor: pointer; padding: 5px 0; transition: all 0.15s;
+}
+.action-btn:hover { color: var(--accent2); }
+.action-btn.liked { color: var(--coral); }
+.action-btn.liked .action-icon { animation: heartPop 0.3s ease; }
+@keyframes heartPop { 0%,100%{transform:scale(1)} 50%{transform:scale(1.3)} }
+.action-icon { font-size: 17px; }
+
+/* ── Post type badge ── */
+.post-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+  margin-bottom: 8px;
+}
+.badge-event { background: var(--teal-dim); color: var(--teal); }
+.badge-announcement { background: var(--coral-dim); color: var(--coral); }
+
+/* ── Right panel ── */
+.right-panel { padding: 20px 20px; display: flex; flex-direction: column; gap: 20px; }
+.panel-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2); padding: 18px;
+}
+.panel-title { font-family: var(--font-head); font-size: 16px; font-weight: 600; margin-bottom: 14px; color: var(--text); }
+.search-box {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg3); border: 1px solid var(--border); border-radius: 30px; padding: 10px 16px;
+  margin-bottom: 20px;
+}
+.search-input { background: none; border: none; color: var(--text); font-family: var(--font-body); font-size: 14px; flex: 1; }
+.search-input::placeholder { color: var(--text3); }
+.search-input:focus { outline: none; }
+
+/* ── Trending topics ── */
+.trend-item {
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: all 0.15s;
+}
+.trend-item:last-child { border-bottom: none; padding-bottom: 0; }
+.trend-item:hover .trend-tag { color: var(--accent2); }
+.trend-cat { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+.trend-tag { font-size: 15px; font-weight: 600; color: var(--text); transition: color 0.15s; }
+.trend-count { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+/* ── Suggested users ── */
+.suggest-item {
+  display: flex; align-items: center; gap: 10px; padding: 8px 0;
+}
+.suggest-info { flex: 1; min-width: 0; }
+.suggest-name { font-size: 14px; font-weight: 500; color: var(--text); display: flex; align-items: center; gap: 4px; }
+.suggest-detail { font-size: 12px; color: var(--text3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.follow-btn {
+  padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+  border: 1px solid var(--accent); color: var(--accent); background: transparent;
+  cursor: pointer; transition: all 0.18s; white-space: nowrap;
+}
+.follow-btn:hover { background: var(--accent); color: white; }
+.follow-btn.following { border-color: var(--border2); color: var(--text2); }
+.follow-btn.following:hover { border-color: var(--coral); color: var(--coral); }
+
+/* ── Chat panel ── */
+.chat-panel {
+  position: fixed; bottom: 24px; right: 24px; width: 340px;
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: var(--r2); box-shadow: var(--shadow); overflow: hidden;
+  transition: all 0.25s ease;
+  z-index: 100;
+}
+.chat-panel.collapsed { height: 52px; }
+.chat-header {
+  display: flex; align-items: center; gap: 10px; padding: 14px 16px;
+  background: var(--bg3); border-bottom: 1px solid var(--border); cursor: pointer;
+}
+.chat-title { font-size: 14px; font-weight: 600; flex: 1; }
+.online-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); }
+.chat-messages { height: 280px; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.msg { display: flex; gap: 8px; max-width: 85%; }
+.msg.own { align-self: flex-end; flex-direction: row-reverse; }
+.msg-bubble {
+  padding: 9px 13px; border-radius: 14px; font-size: 13px; line-height: 1.5; color: var(--text);
+  background: var(--bg4);
+}
+.msg.own .msg-bubble { background: var(--accent); border-radius: 14px 14px 4px 14px; }
+.msg-time { font-size: 10px; color: var(--text3); align-self: flex-end; padding-bottom: 2px; }
+.chat-input-row {
+  display: flex; gap: 8px; padding: 12px 14px; border-top: 1px solid var(--border); align-items: center;
+}
+.chat-input {
+  flex: 1; background: var(--bg3); border: 1px solid var(--border); border-radius: 20px;
+  padding: 8px 14px; color: var(--text); font-family: var(--font-body); font-size: 13px;
+}
+.chat-input:focus { outline: none; border-color: var(--accent); }
+.send-btn {
+  width: 34px; height: 34px; border-radius: 50%; background: var(--accent);
+  border: none; cursor: pointer; color: white; font-size: 16px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: transform 0.15s;
+}
+.send-btn:hover { transform: scale(1.1); }
+
+/* ── Notifications dropdown ── */
+.notif-dropdown {
+  position: absolute; top: calc(100% + 8px); right: 0; width: 360px;
+  background: var(--bg2); border: 1px solid var(--border2); border-radius: var(--r2);
+  box-shadow: var(--shadow); z-index: 200; overflow: hidden;
+  display: none;
+}
+.notif-dropdown.open { display: block; animation: slideDown 0.2s ease; }
+@keyframes slideDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+.notif-item {
+  display: flex; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background 0.15s;
+}
+.notif-item:last-child { border-bottom: none; }
+.notif-item:hover { background: var(--bg3); }
+.notif-item.unread { background: var(--accent-glow); }
+.notif-content { flex: 1; font-size: 13px; line-height: 1.5; }
+.notif-content strong { color: var(--text); }
+.notif-time { font-size: 11px; color: var(--text3); margin-top: 3px; }
+.notif-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 5px; }
+
+/* ── Profile view ── */
+.profile-cover { height: 180px; background: linear-gradient(135deg, #1a0f3c 0%, #0f2a3c 50%, #0f3c2a 100%); position: relative; }
+.profile-cover-pattern {
+  position: absolute; inset: 0; opacity: 0.3;
+  background-image: radial-gradient(circle at 20% 50%, var(--accent) 0%, transparent 60%),
+                    radial-gradient(circle at 80% 30%, var(--teal) 0%, transparent 50%);
+}
+.profile-info-row { padding: 0 24px 20px; border-bottom: 1px solid var(--border); }
+.profile-avatar-wrap { margin-top: -40px; margin-bottom: 12px; }
+.profile-name { font-family: var(--font-head); font-size: 22px; font-weight: 700; }
+.profile-handle { color: var(--text3); font-size: 14px; margin-top: 2px; }
+.profile-bio { font-size: 14px; color: var(--text2); margin: 10px 0; line-height: 1.6; }
+.profile-meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--text3); margin-bottom: 12px; }
+.profile-meta span { display: flex; align-items: center; gap: 5px; }
+.profile-stats { display: flex; gap: 24px; }
+.stat { cursor: pointer; }
+.stat-num { font-family: var(--font-head); font-size: 18px; font-weight: 700; color: var(--text); }
+.stat-label { font-size: 12px; color: var(--text3); }
+.profile-actions { display: flex; gap: 10px; margin-top: 14px; }
+
+/* ── Story row ── */
+.stories {
+  display: flex; gap: 12px; padding: 16px 24px; overflow-x: auto; border-bottom: 1px solid var(--border);
+  scrollbar-width: none;
+}
+.stories::-webkit-scrollbar { display: none; }
+.story { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; flex-shrink: 0; }
+.story-ring {
+  width: 56px; height: 56px; border-radius: 50%; padding: 2px;
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+}
+.story-ring.seen { background: var(--bg4); }
+.story-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg3); border: 2px solid var(--bg); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.story-name { font-size: 11px; color: var(--text2); max-width: 56px; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.story-add { background: var(--bg3); border: 2px dashed var(--border2); }
+
+/* ── Pages / views ── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── Modals / overlays ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+  z-index: 300; display: none; align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+.modal {
+  background: var(--bg2); border: 1px solid var(--border2); border-radius: var(--r2);
+  padding: 28px; width: 480px; max-width: 95vw;
+  animation: scaleIn 0.2s ease;
+}
+@keyframes scaleIn { from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)} }
+.modal-title { font-family: var(--font-head); font-size: 20px; font-weight: 600; margin-bottom: 20px; }
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-size: 13px; color: var(--text2); margin-bottom: 6px; font-weight: 500; }
+.form-input {
+  width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 11px 14px; color: var(--text); font-family: var(--font-body); font-size: 14px;
+  transition: border 0.2s;
+}
+.form-input:focus { outline: none; border-color: var(--accent); }
+.form-input::placeholder { color: var(--text3); }
+
+/* ── Auth screen ── */
+.auth-screen {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: var(--bg); padding: 24px;
+}
+.auth-card {
+  width: 420px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2); padding: 36px; max-width: 100%;
+}
+.auth-logo { text-align: center; margin-bottom: 28px; }
+.auth-logo-icon {
+  width: 56px; height: 56px; border-radius: 16px;
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; font-weight: 700; color: white; font-family: var(--font-head);
+  margin: 0 auto 12px;
+}
+.auth-title { font-family: var(--font-head); font-size: 26px; font-weight: 700; text-align: center; }
+.auth-sub { font-size: 14px; color: var(--text3); text-align: center; margin-top: 4px; margin-bottom: 28px; }
+.divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: var(--text3); font-size: 12px; }
+.divider::before,.divider::after { content:''; flex:1; height:1px; background:var(--border); }
+.auth-switch { text-align: center; font-size: 14px; color: var(--text3); margin-top: 20px; }
+.auth-switch a { color: var(--accent2); cursor: pointer; text-decoration: none; font-weight: 500; }
+
+/* ── Toast ── */
+.toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+  background: var(--bg3); border: 1px solid var(--border2); border-radius: 30px;
+  padding: 11px 22px; font-size: 14px; color: var(--text);
+  z-index: 999; pointer-events: none; opacity: 0; transition: opacity 0.25s;
+  white-space: nowrap; box-shadow: var(--shadow);
+}
+.toast.show { opacity: 1; }
+.toast.success { border-color: var(--green); color: var(--green); }
+.toast.error { border-color: var(--coral); color: var(--coral); }
+
+/* ── Skeleton loader ── */
+.skeleton { background: linear-gradient(90deg, var(--bg3) 25%, var(--bg4) 50%, var(--bg3) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px; }
+@keyframes shimmer { 0%{background-position:200%} 100%{background-position:-200%} }
+
+/* ── Mobile ── */
+@media (max-width: 900px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .right-panel { display: none; }
+  .chat-panel { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── AUTH SCREEN ── -->
+<div id="auth-screen" class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">JG</div>
+      <div class="auth-title">JG Nexus</div>
+      <div class="auth-sub">Your college, connected.</div>
+    </div>
+    <div id="login-form">
+      <div class="form-group">
+        <label class="form-label">Username or Email</label>
+        <input class="form-input" type="text" placeholder="Enter your username or email" id="login-user">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" placeholder="Enter your password" id="login-pass">
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-top:4px;padding:12px" onclick="doLogin()">Sign In</button>
+      <div class="auth-switch">Don't have an account? <a onclick="showRegister()">Sign up</a></div>
+    </div>
+    <div id="register-form" style="display:none">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" placeholder="Vraj M Patel" id="reg-name"></div>
+        <div class="form-group"><label class="form-label">Username</label><input class="form-input" placeholder="vrajpatel" id="reg-user"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="you@college.edu" id="reg-email"></div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" placeholder="Minimum 6 characters" id="reg-pass"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group"><label class="form-label">College</label><input class="form-input" placeholder="GTU" id="reg-college"></div>
+        <div class="form-group"><label class="form-label">Branch</label><input class="form-input" placeholder="Computer Engg." id="reg-branch"></div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-top:4px;padding:12px" onclick="doRegister()">Create Account</button>
+      <div class="auth-switch">Already have an account? <a onclick="showLogin()">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MAIN APP ── -->
+<div id="app" style="display:none">
+<div class="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">JG</div>
+      JG Nexus
+    </div>
+
+    <button class="nav-item active" id="nav-feed" onclick="showPage('feed',this)">
+      <span class="nav-icon">🏠</span> Home
+    </button>
+    <button class="nav-item" id="nav-explore" onclick="showPage('explore',this)">
+      <span class="nav-icon">🔍</span> Explore
+    </button>
+    <button class="nav-item" id="nav-notif" onclick="showPage('notif',this)">
+      <span class="nav-icon">🔔</span> Notifications
+      <span class="nav-badge" id="notif-badge">3</span>
+    </button>
+    <button class="nav-item" id="nav-chat" onclick="showPage('chat',this)">
+      <span class="nav-icon">💬</span> Messages
+      <span class="nav-badge" id="msg-badge">2</span>
+    </button>
+    <button class="nav-item" id="nav-profile" onclick="showPage('profile',this)">
+      <span class="nav-icon">👤</span> Profile
+    </button>
+    <button class="nav-item" onclick="showPage('saved',this)">
+      <span class="nav-icon">🔖</span> Saved
+    </button>
+    <button class="nav-item" onclick="showPage('settings',this)">
+      <span class="nav-icon">⚙️</span> Settings
+    </button>
+
+    <div class="sidebar-profile">
+      <div class="avatar" id="sidebar-avatar">VP</div>
+      <div class="sidebar-profile-info">
+        <div class="sidebar-profile-name" id="sidebar-name">Vraj M Patel</div>
+        <div class="sidebar-profile-handle" id="sidebar-handle">@vrajpatel</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main">
+
+    <!-- Feed page -->
+    <div class="page active" id="page-feed">
+      <div class="feed-header">
+        <div class="feed-title">Home</div>
+        <div class="tab-row">
+          <button class="tab active" onclick="switchTab(this,'for-you')">For You</button>
+          <button class="tab" onclick="switchTab(this,'following')">Following</button>
+          <button class="tab" onclick="switchTab(this,'trending')">Trending</button>
+        </div>
+      </div>
+
+      <!-- Stories -->
+      <div class="stories">
+        <div class="story" onclick="showToast('Your story','')">
+          <div class="story-ring story-add">
+            <div class="story-inner story-add" style="font-size:22px;color:var(--accent)">＋</div>
+          </div>
+          <span class="story-name">Add story</span>
+        </div>
+        <div class="story" onclick="showToast('Arjun\'s story','')">
+          <div class="story-ring"><div class="story-inner"><div class="avatar" style="width:100%;height:100%;border-radius:50%;font-size:18px">AS</div></div></div>
+          <span class="story-name">Arjun</span>
+        </div>
+        <div class="story" onclick="showToast('Priya\'s story','')">
+          <div class="story-ring"><div class="story-inner"><div class="avatar" style="width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#f97066,#fbbf24);font-size:18px">PS</div></div></div>
+          <span class="story-name">Priya</span>
+        </div>
+        <div class="story" onclick="showToast('Rahul\'s story','')">
+          <div class="story-ring seen"><div class="story-inner"><div class="avatar" style="width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#2dd4bf,#3b82f6);font-size:18px">RS</div></div></div>
+          <span class="story-name">Rahul</span>
+        </div>
+        <div class="story" onclick="showToast('Neha\'s story','')">
+          <div class="story-ring"><div class="story-inner"><div class="avatar" style="width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#ec4899);font-size:18px">NK</div></div></div>
+          <span class="story-name">Neha</span>
+        </div>
+        <div class="story" onclick="showToast('Dev\'s story','')">
+          <div class="story-ring seen"><div class="story-inner"><div class="avatar" style="width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#34d399,#3b82f6);font-size:18px">DP</div></div></div>
+          <span class="story-name">Dev</span>
+        </div>
+      </div>
+
+      <!-- Composer -->
+      <div class="composer">
+        <div class="avatar" id="composer-avatar">VP</div>
+        <div class="composer-box">
+          <textarea class="composer-input" id="post-input" placeholder="What's on your mind?" rows="3"></textarea>
+          <div class="composer-actions">
+            <div class="composer-tools">
+              <button class="tool-btn" title="Photo" onclick="showToast('Photo upload coming soon','')">🖼️</button>
+              <button class="tool-btn" title="Event" onclick="showToast('Create event coming soon','')">📅</button>
+              <button class="tool-btn" title="Poll" onclick="showToast('Create poll coming soon','')">📊</button>
+              <button class="tool-btn" title="Tag people" onclick="showToast('Tag people coming soon','')">🏷️</button>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="submitPost()">Post</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Posts -->
+      <div id="posts-container"></div>
+    </div>
+
+    <!-- Explore page -->
+    <div class="page" id="page-explore">
+      <div class="feed-header"><div class="feed-title">Explore</div></div>
+      <div style="padding:20px 24px">
+        <div class="search-box" style="margin-bottom:20px">
+          <span style="color:var(--text3)">🔍</span>
+          <input class="search-input" placeholder="Search posts, people, topics..." oninput="handleSearch(this.value)">
+        </div>
+        <div class="tab-row" style="margin-bottom:20px">
+          <button class="tab active" onclick="switchTab(this,'all')">All</button>
+          <button class="tab" onclick="switchTab(this,'people')">People</button>
+          <button class="tab" onclick="switchTab(this,'posts')">Posts</button>
+          <button class="tab" onclick="switchTab(this,'events')">Events</button>
+        </div>
+        <div id="explore-results"></div>
+      </div>
+    </div>
+
+    <!-- Notifications page -->
+    <div class="page" id="page-notif">
+      <div class="feed-header">
+        <div class="feed-title">Notifications</div>
+        <button class="btn btn-ghost btn-sm" onclick="markAllRead()">Mark all read</button>
+      </div>
+      <div id="notif-list"></div>
+    </div>
+
+    <!-- Chat/Messages page -->
+    <div class="page" id="page-chat">
+      <div class="feed-header"><div class="feed-title">Messages</div></div>
+      <div style="display:flex;height:calc(100vh - 61px)">
+        <div style="width:280px;border-right:1px solid var(--border);overflow-y:auto" id="conv-list"></div>
+        <div style="flex:1;display:flex;flex-direction:column" id="chat-area">
+          <div style="flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--text3)">
+            <div style="font-size:40px">💬</div>
+            <div style="font-size:15px">Select a conversation</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile page -->
+    <div class="page" id="page-profile">
+      <div class="profile-cover">
+        <div class="profile-cover-pattern"></div>
+      </div>
+      <div class="profile-info-row">
+        <div class="profile-avatar-wrap">
+          <div class="avatar xl" id="profile-avatar">VP</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div class="profile-name" id="profile-name">Vraj M Patel</div>
+            <div class="profile-handle" id="profile-handle">@vrajpatel</div>
+            <div class="profile-bio" id="profile-bio">Computer Engineering student 👨‍💻 | Building cool stuff | GTU '26</div>
+            <div class="profile-meta">
+              <span>🎓 GTU</span>
+              <span>💻 Computer Engg.</span>
+              <span>📅 Year 3</span>
+            </div>
+          </div>
+          <div class="profile-actions">
+            <button class="btn btn-ghost btn-sm" onclick="openEditProfile()">Edit Profile</button>
+            <button class="btn btn-ghost btn-sm" onclick="showToast('Share profile link copied!','success')">Share</button>
+          </div>
+        </div>
+        <div class="profile-stats">
+          <div class="stat" onclick="showFollowModal('followers')">
+            <div class="stat-num" id="stat-posts">24</div>
+            <div class="stat-label">Posts</div>
+          </div>
+          <div class="stat" onclick="showFollowModal('followers')">
+            <div class="stat-num" id="stat-followers">1.2K</div>
+            <div class="stat-label">Followers</div>
+          </div>
+          <div class="stat" onclick="showFollowModal('following')">
+            <div class="stat-num" id="stat-following">348</div>
+            <div class="stat-label">Following</div>
+          </div>
+        </div>
+      </div>
+      <div style="padding:0 24px;margin-top:16px" id="profile-posts"></div>
+    </div>
+
+    <!-- Saved page -->
+    <div class="page" id="page-saved">
+      <div class="feed-header"><div class="feed-title">Saved Posts</div></div>
+      <div style="display:flex;align-items:center;justify-content:center;height:300px;flex-direction:column;gap:12px;color:var(--text3)">
+        <div style="font-size:40px">🔖</div>
+        <div>No saved posts yet</div>
+      </div>
+    </div>
+
+    <!-- Settings page -->
+    <div class="page" id="page-settings">
+      <div class="feed-header"><div class="feed-title">Settings</div></div>
+      <div style="padding:24px;max-width:500px">
+        <div class="panel-card" style="margin-bottom:16px">
+          <div class="panel-title">Account</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
+              <div><div style="font-size:14px;font-weight:500">Change Password</div><div style="font-size:12px;color:var(--text3)">Update your account password</div></div>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Change password coming soon','')">Change</button>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
+              <div><div style="font-size:14px;font-weight:500">Two-Factor Auth</div><div style="font-size:12px;color:var(--text3)">Add an extra layer of security</div></div>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('2FA coming soon','')">Enable</button>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0">
+              <div><div style="font-size:14px;font-weight:500;color:var(--coral)">Sign Out</div><div style="font-size:12px;color:var(--text3)">Sign out of JG Nexus</div></div>
+              <button class="btn btn-sm" style="background:var(--coral-dim);color:var(--coral);border:none" onclick="doLogout()">Sign Out</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">Notifications</div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-size:14px">Likes on your posts</div>
+              <input type="checkbox" checked style="width:18px;height:18px;cursor:pointer;accent-color:var(--accent)">
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-size:14px">New followers</div>
+              <input type="checkbox" checked style="width:18px;height:18px;cursor:pointer;accent-color:var(--accent)">
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-size:14px">Comments on your posts</div>
+              <input type="checkbox" checked style="width:18px;height:18px;cursor:pointer;accent-color:var(--accent)">
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-size:14px">Messages</div>
+              <input type="checkbox" checked style="width:18px;height:18px;cursor:pointer;accent-color:var(--accent)">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Right panel -->
+  <aside class="right-panel">
+    <div class="search-box">
+      <span style="color:var(--text3)">🔍</span>
+      <input class="search-input" placeholder="Search JG Nexus..." oninput="handleSearch(this.value)">
+    </div>
+
+    <!-- Trending -->
+    <div class="panel-card">
+      <div class="panel-title">Trending on JG Nexus</div>
+      <div id="trending-list"></div>
+    </div>
+
+    <!-- Suggestions -->
+    <div class="panel-card">
+      <div class="panel-title">People You May Know</div>
+      <div id="suggestions-list"></div>
+    </div>
+
+    <!-- College events -->
+    <div class="panel-card">
+      <div class="panel-title">Upcoming Events</div>
+      <div style="display:flex;flex-direction:column;gap:10px" id="events-list"></div>
+    </div>
+  </aside>
+
+</div>
+</div>
+
+<!-- ── CHAT PANEL (floating) ── -->
+<div class="chat-panel" id="chat-panel">
+  <div class="chat-header" onclick="toggleChat()">
+    <div class="online-dot"></div>
+    <div class="chat-title">Arjun Shah</div>
+    <span style="color:var(--text3);font-size:12px">Online</span>
+    <span id="chat-toggle-icon" style="color:var(--text3);margin-left:8px">▼</span>
+  </div>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-input-row">
+    <input class="chat-input" placeholder="Type a message..." id="chat-msg-input" onkeydown="if(event.key==='Enter')sendChatMsg()">
+    <button class="send-btn" onclick="sendChatMsg()">➤</button>
+  </div>
+</div>
+
+<!-- ── MODALS ── -->
+<div class="modal-overlay" id="edit-profile-modal">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div class="modal-title" style="margin:0">Edit Profile</div>
+      <button onclick="closeModal('edit-profile-modal')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px">✕</button>
+    </div>
+    <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="edit-fullname" value="Vraj M Patel"></div>
+    <div class="form-group"><label class="form-label">Bio</label><textarea class="form-input" id="edit-bio" rows="3">Computer Engineering student 👨‍💻 | Building cool stuff | GTU '26</textarea></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="form-group"><label class="form-label">College</label><input class="form-input" id="edit-college" value="GTU"></div>
+      <div class="form-group"><label class="form-label">Branch</label><input class="form-input" id="edit-branch" value="Computer Engg."></div>
+    </div>
+    <div class="form-group"><label class="form-label">Year of Study</label><input class="form-input" id="edit-year" type="number" value="3"></div>
+    <div style="display:flex;gap:10px;margin-top:4px">
+      <button class="btn btn-ghost" onclick="closeModal('edit-profile-modal')" style="flex:1">Cancel</button>
+      <button class="btn btn-primary" onclick="saveProfile()" style="flex:1">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="post-detail-modal">
+  <div class="modal" style="width:600px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div class="modal-title" style="margin:0">Post</div>
+      <button onclick="closeModal('post-detail-modal')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px">✕</button>
+    </div>
+    <div id="post-detail-content"></div>
+    <div style="border-top:1px solid var(--border);padding-top:16px;margin-top:16px">
+      <div style="font-size:14px;font-weight:600;margin-bottom:12px;color:var(--text2)">Comments</div>
+      <div id="comments-container" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;max-height:200px;overflow-y:auto"></div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div class="avatar sm">VP</div>
+        <input class="form-input" placeholder="Write a comment..." id="comment-input" style="flex:1;padding:8px 14px" onkeydown="if(event.key==='Enter')submitComment()">
+        <button class="btn btn-primary btn-sm" onclick="submitComment()">Post</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── State ──
+const state = {
+  user: null,
+  posts: [],
+  notifications: [],
+  chatOpen: true,
+  currentTab: 'for-you',
+  chatMessages: []
+};
+
+// ── Sample data ──
+const SAMPLE_USERS = [
+  { id:2, username:'arjunshah', fullName:'Arjun Shah', initials:'AS', college:'GTU', branch:'IT', year:3, bio:'Full-stack dev | React + Spring', followers:843, following:212, verified:true, color:'linear-gradient(135deg,#7c5cfc,#2dd4bf)' },
+  { id:3, username:'priyasharma', fullName:'Priya Sharma', initials:'PS', college:'GTU', branch:'CSE', year:2, bio:'ML enthusiast | Python lover', followers:1200, following:300, verified:false, color:'linear-gradient(135deg,#f97066,#fbbf24)' },
+  { id:4, username:'rahuldev', fullName:'Rahul Dev', initials:'RD', college:'GTU', branch:'ECE', year:4, bio:'Hardware × Software | IoT', followers:560, following:189, verified:false, color:'linear-gradient(135deg,#2dd4bf,#3b82f6)' },
+  { id:5, username:'nehakumar', fullName:'Neha Kumar', initials:'NK', college:'GTU', branch:'CSE', year:3, bio:'UI/UX Designer | Figma ✦', followers:990, following:410, verified:true, color:'linear-gradient(135deg,#a78bfa,#ec4899)' },
+  { id:6, username:'devpatel', fullName:'Dev Patel', initials:'DP', college:'GTU', branch:'IT', year:1, bio:'First year, big dreams 🚀', followers:234, following:98, verified:false, color:'linear-gradient(135deg,#34d399,#3b82f6)' },
+];
+
+const SAMPLE_POSTS = [
+  { id:1, author:SAMPLE_USERS[0], content:'Just deployed my first full-stack project using Spring Boot + React! The WebSocket real-time chat was the trickiest part but so satisfying when messages started flowing. Shoutout to everyone who helped debug 🙌\n\n<span class="tag">#SpringBoot</span> <span class="tag">#React</span> <span class="tag">#WebDev</span>', likes:47, liked:false, comments:12, time:'2h ago', hasImage:false, type:'REGULAR' },
+  { id:2, author:SAMPLE_USERS[3], content:'📢 REMINDER: Hackathon registration closes TONIGHT at 11:59 PM! 48 teams already registered — grab your spot before it\'s too late. Link in bio.\n\n<span class="tag">#TechFest2026</span> <span class="tag">#Hackathon</span> <span class="tag">#GTU</span>', likes:128, liked:false, comments:34, time:'4h ago', hasImage:false, type:'ANNOUNCEMENT' },
+  { id:3, author:SAMPLE_USERS[1], content:'Hot take: Learning DSA without building real projects is like studying swimming without water. You need both to actually get good. Currently grinding LeetCode AND building a mini OS scheduler. Anyone else doing both? 🤔\n\n<span class="tag">#DSA</span> <span class="tag">#Programming</span>', likes:92, liked:true, comments:28, time:'6h ago', hasImage:false, type:'REGULAR' },
+  { id:4, author:SAMPLE_USERS[2], content:'🗓️ ACM Chapter meeting this Friday at 4PM in Lab 3! Topics: OS Process Scheduling deep dive + Career opportunities at TCS and Infosys campus recruiters are joining. Don\'t miss it!\n\n<span class="tag">#ACM</span> <span class="tag">#CampusLife</span> <span class="tag">#GTU</span>', likes:63, liked:false, comments:19, time:'8h ago', hasImage:true, type:'EVENT' },
+  { id:5, author:SAMPLE_USERS[4], content:'First year but already loving CP! Solved my 50th problem on Codeforces today. Rating 1200 and climbing. Any seniors willing to mentor? Would love some guidance on graph algorithms 🙏\n\n<span class="tag">#CompetitiveProgramming</span> <span class="tag">#Codeforces</span>', likes:34, liked:false, comments:22, time:'12h ago', hasImage:false, type:'REGULAR' },
+  { id:6, author:SAMPLE_USERS[1], content:'Finally understood Redis caching today. The difference between cache-aside and write-through patterns clicked after a 2-hour deep dive. Pro tip: start with cache-aside for most use cases — simpler and works for 90% of scenarios.\n\n<span class="tag">#Redis</span> <span class="tag">#Backend</span> <span class="tag">#LearnInPublic</span>', likes:71, liked:false, comments:15, time:'1d ago', hasImage:false, type:'REGULAR' },
+];
+
+const SAMPLE_NOTIFICATIONS = [
+  { id:1, actor:SAMPLE_USERS[0], type:'LIKE', message:'liked your post about Spring Boot', time:'10m ago', read:false },
+  { id:2, actor:SAMPLE_USERS[1], type:'COMMENT', message:'commented: "Great work! The WebSocket part is always tricky"', time:'25m ago', read:false },
+  { id:3, actor:SAMPLE_USERS[2], type:'FOLLOW', message:'started following you', time:'1h ago', read:false },
+  { id:4, actor:SAMPLE_USERS[3], type:'LIKE', message:'liked your comment', time:'2h ago', read:true },
+  { id:5, actor:SAMPLE_USERS[4], type:'MENTION', message:'mentioned you in a post', time:'5h ago', read:true },
+];
+
+const SAMPLE_CHAT = [
+  { from:'them', text:'Hey! Saw your Spring Boot project — really impressive work on the WebSocket part', time:'10:32' },
+  { from:'me', text:'Thanks! It took a while to get the STOMP auth working with JWT 😅', time:'10:33' },
+  { from:'them', text:'Yeah the interceptor pattern is a bit tricky. Did you use ChannelInterceptor?', time:'10:34' },
+  { from:'me', text:'Exactly! Intercepted the CONNECT command and validated the Bearer token. Worked perfectly.', time:'10:35' },
+  { from:'them', text:'Smart. I might steal that approach for my project lol', time:'10:36' },
+];
+
+const TRENDING = [
+  { cat:'Computer Science', tag:'#SpringBoot', count:'2.4K posts' },
+  { cat:'Campus Events', tag:'#TechFest2026', count:'1.8K posts' },
+  { cat:'Programming', tag:'#DSA', count:'3.1K posts' },
+  { cat:'Career', tag:'#CampusPlacement', count:'892 posts' },
+  { cat:'Technology', tag:'#AIinCollege', count:'671 posts' },
+];
+
+const EVENTS = [
+  { title:'Hackathon 2026', date:'Mar 28', org:'CSI GTU', color:'var(--accent)' },
+  { title:'ML Workshop', date:'Apr 2', org:'AI Club', color:'var(--teal)' },
+  { title:'Campus Drive — TCS', date:'Apr 8', org:'Placement Cell', color:'var(--gold)' },
+];
+
+// ── Init ──
+function init() {
+  renderPosts();
+  renderTrending();
+  renderSuggestions();
+  renderEvents();
+  renderNotifications();
+  renderChatMessages();
+  renderConversations();
+  renderProfilePosts();
+  renderExplore();
+}
+
+// ── Auth ──
+function doLogin() {
+  const u = document.getElementById('login-user').value || 'vrajpatel';
+  const p = document.getElementById('login-pass').value || 'pass';
+  if (!u) { showToast('Please enter your username', 'error'); return; }
+  state.user = { username: u, fullName: u === 'vrajpatel' ? 'Vraj M Patel' : u, initials: u.slice(0,2).toUpperCase() };
+  loginSuccess();
+}
+
+function doRegister() {
+  const name = document.getElementById('reg-name').value || 'Vraj M Patel';
+  const user = document.getElementById('reg-user').value || 'vrajpatel';
+  if (!name || !user) { showToast('Please fill all fields', 'error'); return; }
+  state.user = { username: user, fullName: name, initials: name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() };
+  loginSuccess();
+}
+
+function loginSuccess() {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app').style.display = '';
+  document.getElementById('sidebar-name').textContent = state.user.fullName;
+  document.getElementById('sidebar-handle').textContent = '@' + state.user.username;
+  document.getElementById('sidebar-avatar').textContent = state.user.initials;
+  document.getElementById('profile-avatar').textContent = state.user.initials;
+  document.getElementById('composer-avatar').textContent = state.user.initials;
+  document.getElementById('profile-name').textContent = state.user.fullName;
+  document.getElementById('profile-handle').textContent = '@' + state.user.username;
+  init();
+  showToast('Welcome back, ' + state.user.fullName.split(' ')[0] + '! 👋', 'success');
+}
+
+function doLogout() {
+  state.user = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('auth-screen').style.display = '';
+  showLogin();
+}
+
+function showRegister() {
+  document.getElementById('login-form').style.display = 'none';
+  document.getElementById('register-form').style.display = '';
+}
+function showLogin() {
+  document.getElementById('login-form').style.display = '';
+  document.getElementById('register-form').style.display = 'none';
+}
+
+// ── Navigation ──
+function showPage(page, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (page === 'notif') {
+    document.getElementById('notif-badge').style.display = 'none';
+  }
+  if (page === 'chat') {
+    document.getElementById('msg-badge').style.display = 'none';
+  }
+}
+
+function switchTab(el, tab) {
+  el.closest('.tab-row').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  state.currentTab = tab;
+  if (tab === 'trending') renderTrendingPosts();
+  else renderPosts();
+}
+
+// ── Posts ──
+function renderPosts(container = 'posts-container') {
+  const c = document.getElementById(container);
+  c.innerHTML = state.posts.concat(SAMPLE_POSTS).map(p => postHTML(p)).join('');
+}
+
+function renderTrendingPosts() {
+  const sorted = [...SAMPLE_POSTS].sort((a,b) => b.likes - a.likes);
+  document.getElementById('posts-container').innerHTML = sorted.map(p => postHTML(p)).join('');
+}
+
+function postHTML(p) {
+  const badgeMap = { ANNOUNCEMENT: 'badge-announcement', EVENT: 'badge-event' };
+  const badgeIcon = { ANNOUNCEMENT: '📢 Announcement', EVENT: '🗓️ Event' };
+  const badge = badgeMap[p.type] ? `<div class="post-badge ${badgeMap[p.type]}">${badgeIcon[p.type]}</div>` : '';
+  const image = p.hasImage ? `<div class="post-image">📷 Image preview</div>` : '';
+  return `
+  <div class="post" onclick="openPostDetail(${p.id})">
+    <div class="post-header">
+      <div class="avatar" style="background:${p.author.color||'linear-gradient(135deg,var(--accent),var(--teal))'};flex-shrink:0">${p.author.initials}</div>
+      <div class="post-meta">
+        <div class="post-author">${p.author.fullName} ${p.author.verified ? '<span class="verified">✓</span>' : ''}</div>
+        <div class="post-handle"><span>@${p.author.username}</span> · ${p.time}</div>
+      </div>
+    </div>
+    ${badge}
+    <div class="post-content">${p.content}</div>
+    ${image}
+    <div class="post-actions" onclick="event.stopPropagation()">
+      <button class="action-btn ${p.liked?'liked':''}" onclick="toggleLike(${p.id})">
+        <span class="action-icon">${p.liked ? '❤️' : '🤍'}</span> ${p.likes}
+      </button>
+      <button class="action-btn" onclick="openPostDetail(${p.id})">
+        <span class="action-icon">💬</span> ${p.comments}
+      </button>
+      <button class="action-btn" onclick="repost(${p.id})">
+        <span class="action-icon">🔁</span> Repost
+      </button>
+      <button class="action-btn" onclick="savePost(${p.id})">
+        <span class="action-icon">🔖</span> Save
+      </button>
+    </div>
+  </div>`;
+}
+
+function submitPost() {
+  const input = document.getElementById('post-input');
+  const text = input.value.trim();
+  if (!text) { showToast('Write something first!', 'error'); return; }
+  const newPost = {
+    id: Date.now(), author: { username: state.user.username, fullName: state.user.fullName, initials: state.user.initials, verified: false, color: 'linear-gradient(135deg,var(--accent),var(--teal))' },
+    content: text.replace(/#(\w+)/g, '<span class="tag">#$1</span>'),
+    likes: 0, liked: false, comments: 0, time: 'Just now', hasImage: false, type: 'REGULAR'
+  };
+  state.posts.unshift(newPost);
+  input.value = '';
+  renderPosts();
+  showToast('Post published! 🎉', 'success');
+}
+
+function toggleLike(postId) {
+  const all = [...state.posts, ...SAMPLE_POSTS];
+  const post = all.find(p => p.id === postId);
+  if (!post) return;
+  post.liked = !post.liked;
+  post.likes += post.liked ? 1 : -1;
+  renderPosts();
+}
+
+function repost(id) { showToast('Reposted!', 'success'); }
+function savePost(id) { showToast('Post saved!', 'success'); }
+
+function openPostDetail(postId) {
+  const all = [...state.posts, ...SAMPLE_POSTS];
+  const post = all.find(p => p.id === postId);
+  if (!post) return;
+  document.getElementById('post-detail-content').innerHTML = postHTML(post).replace('onclick="openPostDetail(' + postId + ')"', '');
+  document.getElementById('comments-container').innerHTML = [
+    { author: SAMPLE_USERS[1], text: 'Great work! The WebSocket part is always tricky 🔥', time: '2h ago' },
+    { author: SAMPLE_USERS[2], text: 'This is really helpful, thanks for sharing!', time: '3h ago' },
+  ].map(c => `
+    <div style="display:flex;gap:10px">
+      <div class="avatar sm" style="background:${c.author.color}">${c.author.initials}</div>
+      <div>
+        <div style="font-size:13px;font-weight:600">${c.author.fullName} <span style="font-size:11px;color:var(--text3);font-weight:400">${c.time}</span></div>
+        <div style="font-size:13px;color:var(--text2);margin-top:2px">${c.text}</div>
+      </div>
+    </div>`).join('');
+  document.getElementById('post-detail-modal').classList.add('open');
+}
+
+function submitComment() {
+  const input = document.getElementById('comment-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const c = document.getElementById('comments-container');
+  c.innerHTML += `<div style="display:flex;gap:10px"><div class="avatar sm">${state.user.initials}</div><div><div style="font-size:13px;font-weight:600">${state.user.fullName} <span style="font-size:11px;color:var(--text3);font-weight:400">Just now</span></div><div style="font-size:13px;color:var(--text2);margin-top:2px">${text}</div></div></div>`;
+  input.value = '';
+  showToast('Comment added!', 'success');
+}
+
+// ── Trending / sidebar ──
+function renderTrending() {
+  document.getElementById('trending-list').innerHTML = TRENDING.map(t => `
+    <div class="trend-item" onclick="showToast('Browsing ${t.tag}','')">
+      <div class="trend-cat">${t.cat}</div>
+      <div class="trend-tag">${t.tag}</div>
+      <div class="trend-count">${t.count}</div>
+    </div>`).join('');
+}
+
+function renderSuggestions() {
+  document.getElementById('suggestions-list').innerHTML = SAMPLE_USERS.slice(0,4).map(u => `
+    <div class="suggest-item">
+      <div class="avatar sm" style="background:${u.color}">${u.initials}</div>
+      <div class="suggest-info">
+        <div class="suggest-name">${u.fullName} ${u.verified ? '<span style="color:var(--teal);font-size:12px">✓</span>' : ''}</div>
+        <div class="suggest-detail">${u.branch} · ${u.college}</div>
+      </div>
+      <button class="follow-btn" id="follow-${u.id}" onclick="toggleFollow(${u.id},this)">Follow</button>
+    </div>`).join('');
+}
+
+function renderEvents() {
+  document.getElementById('events-list').innerHTML = EVENTS.map(e => `
+    <div style="display:flex;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="showToast('Event details coming soon','')">
+      <div style="width:40px;height:40px;border-radius:10px;background:${e.color}22;border:1px solid ${e.color}44;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:${e.color};text-align:center;flex-shrink:0">${e.date}</div>
+      <div>
+        <div style="font-size:14px;font-weight:500">${e.title}</div>
+        <div style="font-size:12px;color:var(--text3)">${e.org}</div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleFollow(userId, btn) {
+  const isFollowing = btn.classList.contains('following');
+  btn.classList.toggle('following');
+  btn.textContent = isFollowing ? 'Follow' : 'Following';
+  showToast(isFollowing ? 'Unfollowed' : 'Following!', isFollowing ? '' : 'success');
+}
+
+// ── Notifications ──
+function renderNotifications() {
+  const icons = { LIKE: '❤️', COMMENT: '💬', FOLLOW: '👤', MENTION: '🏷️', POST: '📝' };
+  document.getElementById('notif-list').innerHTML = SAMPLE_NOTIFICATIONS.map(n => `
+    <div class="notif-item ${n.read ? '' : 'unread'}" onclick="markRead(${n.id})">
+      <div class="avatar sm" style="background:${n.actor.color}">${n.actor.initials}</div>
+      <div class="notif-content">
+        <strong>${n.actor.fullName}</strong> ${n.message}
+        <div class="notif-time">${icons[n.type]} · ${n.time}</div>
+      </div>
+      ${!n.read ? '<div class="notif-dot"></div>' : ''}
+    </div>`).join('');
+}
+
+function markRead(id) {
+  const n = SAMPLE_NOTIFICATIONS.find(n => n.id === id);
+  if (n) n.read = true;
+  renderNotifications();
+}
+
+function markAllRead() {
+  SAMPLE_NOTIFICATIONS.forEach(n => n.read = true);
+  renderNotifications();
+  showToast('All notifications marked as read', 'success');
+}
+
+// ── Chat ──
+function renderChatMessages() {
+  const c = document.getElementById('chat-messages');
+  c.innerHTML = SAMPLE_CHAT.map(m => `
+    <div class="msg ${m.from === 'me' ? 'own' : ''}">
+      ${m.from !== 'me' ? '<div class="avatar sm" style="background:linear-gradient(135deg,var(--accent),var(--teal))">AS</div>' : ''}
+      <div>
+        <div class="msg-bubble">${m.text}</div>
+        <div class="msg-time">${m.time}</div>
+      </div>
+    </div>`).join('');
+  c.scrollTop = c.scrollHeight;
+}
+
+function sendChatMsg() {
+  const input = document.getElementById('chat-msg-input');
+  const text = input.value.trim();
+  if (!text) return;
+  SAMPLE_CHAT.push({ from: 'me', text, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
+  input.value = '';
+  renderChatMessages();
+  setTimeout(() => {
+    SAMPLE_CHAT.push({ from: 'them', text: 'Got it! 👍', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
+    renderChatMessages();
+  }, 1200);
+}
+
+function toggleChat() {
+  state.chatOpen = !state.chatOpen;
+  document.getElementById('chat-panel').classList.toggle('collapsed', !state.chatOpen);
+  document.getElementById('chat-toggle-icon').textContent = state.chatOpen ? '▼' : '▲';
+}
+
+function renderConversations() {
+  document.getElementById('conv-list').innerHTML = SAMPLE_USERS.slice(0,5).map((u,i) => `
+    <div style="display:flex;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background=''" onclick="openConversation(${u.id})">
+      <div style="position:relative;flex-shrink:0">
+        <div class="avatar" style="background:${u.color}">${u.initials}</div>
+        ${i < 2 ? '<div style="position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;background:var(--green);border:2px solid var(--bg2)"></div>' : ''}
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;justify-content:space-between">
+          <div style="font-size:14px;font-weight:500">${u.fullName}</div>
+          <div style="font-size:11px;color:var(--text3)">${['2m', '15m', '1h', '3h', 'Yesterday'][i]}</div>
+        </div>
+        <div style="font-size:12px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+          ${['Great work on the project! 🔥', 'Did you solve that graph problem?', 'See you at the hackathon!', 'Check out this article', 'Thanks for the help!'][i]}
+        </div>
+      </div>
+      ${i < 2 ? '<div style="width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:4px"></div>' : ''}
+    </div>`).join('');
+}
+
+function openConversation(userId) {
+  const user = SAMPLE_USERS.find(u => u.id === userId);
+  if (!user) return;
+  document.getElementById('chat-area').innerHTML = `
+    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px">
+      <div class="avatar" style="background:${user.color}">${user.initials}</div>
+      <div>
+        <div style="font-weight:600">${user.fullName}</div>
+        <div style="font-size:12px;color:var(--green)">● Online</div>
+      </div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px" id="main-chat-msgs">
+      ${SAMPLE_CHAT.map(m => `<div class="msg ${m.from === 'me' ? 'own' : ''}">
+        ${m.from !== 'me' ? `<div class="avatar sm" style="background:${user.color}">${user.initials}</div>` : ''}
+        <div><div class="msg-bubble">${m.text}</div><div class="msg-time">${m.time}</div></div>
+      </div>`).join('')}
+    </div>
+    <div style="padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center">
+      <input class="chat-input" placeholder="Type a message..." id="main-chat-input" style="flex:1" onkeydown="if(event.key==='Enter')sendMainChat(${userId})">
+      <button class="send-btn" onclick="sendMainChat(${userId})">➤</button>
+    </div>`;
+}
+
+function sendMainChat(userId) {
+  const user = SAMPLE_USERS.find(u => u.id === userId);
+  const input = document.getElementById('main-chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const msgs = document.getElementById('main-chat-msgs');
+  msgs.innerHTML += `<div class="msg own"><div><div class="msg-bubble">${text}</div><div class="msg-time">Now</div></div></div>`;
+  input.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(() => {
+    msgs.innerHTML += `<div class="msg"><div class="avatar sm" style="background:${user.color}">${user.initials}</div><div><div class="msg-bubble">Got it! 👍</div><div class="msg-time">Now</div></div></div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 1000);
+}
+
+// ── Profile ──
+function renderProfilePosts() {
+  const pp = document.getElementById('profile-posts');
+  pp.innerHTML = SAMPLE_POSTS.slice(0,3).map(p => `
+    <div style="border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;cursor:pointer" onclick="openPostDetail(${p.id})">
+      <div style="font-size:14px;color:var(--text2);line-height:1.5;margin-bottom:10px">${p.content.replace(/<[^>]+>/g,'').slice(0,120)}...</div>
+      <div style="display:flex;gap:16px;font-size:12px;color:var(--text3)">
+        <span>❤️ ${p.likes}</span><span>💬 ${p.comments}</span><span>${p.time}</span>
+      </div>
+    </div>`).join('');
+}
+
+function openEditProfile() {
+  document.getElementById('edit-profile-modal').classList.add('open');
+}
+
+function saveProfile() {
+  const name = document.getElementById('edit-fullname').value;
+  const bio = document.getElementById('edit-bio').value;
+  document.getElementById('profile-name').textContent = name;
+  document.getElementById('profile-bio').textContent = bio;
+  document.getElementById('sidebar-name').textContent = name;
+  closeModal('edit-profile-modal');
+  showToast('Profile updated!', 'success');
+}
+
+// ── Explore ──
+function renderExplore() {
+  const c = document.getElementById('explore-results');
+  const usersHTML = `<div style="margin-bottom:24px"><div style="font-size:14px;font-weight:600;color:var(--text2);margin-bottom:12px">People</div>${SAMPLE_USERS.map(u => `
+    <div class="suggest-item" style="padding:12px 0;border-bottom:1px solid var(--border)">
+      <div class="avatar" style="background:${u.color}">${u.initials}</div>
+      <div class="suggest-info">
+        <div class="suggest-name" style="font-size:15px">${u.fullName} ${u.verified ? '<span style="color:var(--teal)">✓</span>' : ''}</div>
+        <div class="suggest-detail">${u.branch} · ${u.college} · ${u.followers} followers</div>
+      </div>
+      <button class="follow-btn" onclick="toggleFollow(${u.id},this)">Follow</button>
+    </div>`).join('')}</div>`;
+  c.innerHTML = usersHTML + `<div><div style="font-size:14px;font-weight:600;color:var(--text2);margin-bottom:12px">Posts</div>${SAMPLE_POSTS.map(p => postHTML(p)).join('')}</div>`;
+}
+
+function handleSearch(val) {
+  if (!val) { renderExplore(); return; }
+  const v = val.toLowerCase();
+  const filteredUsers = SAMPLE_USERS.filter(u => u.fullName.toLowerCase().includes(v) || u.username.toLowerCase().includes(v));
+  const filteredPosts = SAMPLE_POSTS.filter(p => p.content.toLowerCase().includes(v));
+  const c = document.getElementById('explore-results');
+  c.innerHTML = `
+    ${filteredUsers.length ? `<div style="margin-bottom:20px"><div style="font-size:14px;font-weight:600;color:var(--text2);margin-bottom:10px">People (${filteredUsers.length})</div>${filteredUsers.map(u => `<div class="suggest-item" style="padding:10px 0;border-bottom:1px solid var(--border)"><div class="avatar" style="background:${u.color}">${u.initials}</div><div class="suggest-info"><div class="suggest-name">${u.fullName}</div><div class="suggest-detail">${u.branch}</div></div><button class="follow-btn" onclick="toggleFollow(${u.id},this)">Follow</button></div>`).join('')}</div>` : ''}
+    ${filteredPosts.length ? `<div><div style="font-size:14px;font-weight:600;color:var(--text2);margin-bottom:10px">Posts (${filteredPosts.length})</div>${filteredPosts.map(p => postHTML(p)).join('')}</div>` : ''}
+    ${!filteredUsers.length && !filteredPosts.length ? `<div style="text-align:center;padding:40px;color:var(--text3)"><div style="font-size:36px;margin-bottom:12px">🔍</div>No results for "${val}"</div>` : ''}`;
+}
+
+// ── Modals / Toasts ──
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }));
+
+let toastTimeout;
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function showFollowModal(type) { showToast(type === 'followers' ? '1,200 followers' : '348 following', ''); }
+
+// Auto-login for demo
+window.onload = () => {
+  document.getElementById('login-user').value = 'vrajpatel';
+  document.getElementById('login-pass').value = 'password';
+};
+</script>
+</body>
+</html>
