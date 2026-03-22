@@ -8,11 +8,12 @@ spring:
     name: jg-nexus
 
   datasource:
-    url: ${DATABASE_URL}
+    url: jdbc:postgresql://dpg-d6vnktn5r7bs73etm99g-a/jg_nexus
+    username: jg_nexus_user
+    password: wu3KVOgktt5b11LTLcUqsn0p0XYq8baQ
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 3
-      connection-timeout: 30000
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
